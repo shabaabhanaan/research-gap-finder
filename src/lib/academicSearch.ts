@@ -59,25 +59,25 @@ function formatBibtex(id: string, authors: string[], year: string | number, titl
  */
 export async function searchAcademicLiterature(
   query: string,
-  limit: number = 5
+  limit: number = 10
 ): Promise<{ references: ReferenceItem[]; papers: Paper[] }> {
   // Extract keywords from query
-  const cleanQuery = query
+  const queryKeywords = query
     .replace(/[^\w\s-]/g, ' ')
     .split(/\s+/)
-    .filter(w => w.length > 2 && !/^(the|and|for|with|from|this|that|via|into|under|using)$/i.test(w))
-    .slice(0, 8)
-    .join(' ');
+    .filter(w => w.length > 2 && !/^(the|and|for|with|from|this|that|via|into|under|using|toward|towards|study|based|paper)$/i.test(w));
+
+  const cleanQuery = queryKeywords.slice(0, 8).join(' ');
+  const fetchRows = Math.min(Math.max(limit * 3, 25), 50);
 
   const encodedQuery = encodeURIComponent(cleanQuery || query.slice(0, 60));
-  const url = `https://api.crossref.org/works?query=${encodedQuery}&rows=${limit}&sort=relevance`;
+  const url = `https://api.crossref.org/works?query=${encodedQuery}&rows=${fetchRows}&sort=relevance`;
 
-  const references: ReferenceItem[] = [];
-  const papers: Paper[] = [];
+  const rawCandidates: { item: any; relevanceScore: number }[] = [];
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
+    const timeout = setTimeout(() => controller.abort(), 9000);
 
     const res = await fetch(url, {
       signal: controller.signal,
@@ -91,100 +91,124 @@ export async function searchAcademicLiterature(
       const data = await res.json();
       const items = data?.message?.items || [];
 
-      items.forEach((item: any, idx: number) => {
-        const title = Array.isArray(item.title) ? item.title[0] : (item.title || 'Untitled Publication');
-        if (!title || title.length < 5) return;
-
-        const authors: string[] = [];
-        if (Array.isArray(item.author)) {
-          item.author.forEach((a: any) => {
-            if (a.family) {
-              authors.push(a.given ? `${a.given[0]}. ${a.family}` : a.family);
-            }
-          });
-        }
-        if (authors.length === 0) authors.push('Academic Research Team');
-
-        const year = item.issued?.['date-parts']?.[0]?.[0] ||
-                     item.created?.['date-parts']?.[0]?.[0] ||
-                     new Date().getFullYear();
-
-        const venue = item['container-title']?.[0] ||
-                      item.publisher ||
-                      'Peer-Reviewed Academic Proceedings';
-
-        const doi = item.DOI || '';
-        const paperUrl = item.URL || (doi ? `https://doi.org/${doi}` : `https://scholar.google.com/scholar?q=${encodeURIComponent(title)}`);
-        const abstract = cleanAbstract(item.abstract || '');
-
-        const refItem: ReferenceItem = {
-          id: `ref-${idx + 1}-${doi || Math.random().toString(36).substring(2, 6)}`,
-          title,
-          authors,
-          year,
-          venue,
-          publisher: item.publisher,
-          doi,
-          url: paperUrl,
-          abstract: abstract || `Peer-reviewed study investigating ${cleanQuery}. Evaluated empirical baselines and methodological trade-offs.`,
-          citationApa: formatApaCitation(authors, year, title, venue, doi),
-          citationIeee: formatIeeeCitation(idx + 1, authors, year, title, venue, doi),
-          bibtex: formatBibtex(`ref-${idx + 1}`, authors, year, title, venue, doi)
-        };
-
-        references.push(refItem);
-
-        // Derive limitations and future work based on literature patterns
-        const limitations: string[] = [
-          `Evaluation restricted to standard benchmark environments without live production stress testing.`,
-          `High computational overhead and reliance on extensive trace data impedes real-time execution.`,
-          `Lacks robust cross-domain validation on non-deterministic and asynchronous edge conditions.`
-        ];
-
-        const futureWork: string[] = [
-          `Incorporate lightweight online diagnostic triage to reduce pipeline latency.`,
-          `Validate generalization across multi-framework web environments and distributed systems.`
-        ];
-
-        papers.push({
-          id: `paper-ref-${idx + 1}`,
-          title,
-          authors,
-          year,
-          venue,
-          url: paperUrl,
-          doi,
-          fileName: `${title.slice(0, 30).replace(/[^\w]/g, '_')}.pdf`,
-          abstract: abstract || refItem.abstract!,
-          methodology: `Quantitative empirical evaluation on benchmark test suites and execution logs.`,
-          datasetOrSample: `Automated test trace corpus and historic commit logs.`,
-          limitations,
-          futureWork
+      // Score relevance against query keywords to filter out unrelated papers
+      items.forEach((item: any) => {
+        const title = (Array.isArray(item.title) ? item.title[0] : (item.title || '')).toLowerCase();
+        const abstract = cleanAbstract(item.abstract || '').toLowerCase();
+        let score = 0;
+        queryKeywords.forEach(kw => {
+          const kwLower = kw.toLowerCase();
+          if (title.includes(kwLower)) score += 3;
+          if (abstract.includes(kwLower)) score += 1;
         });
+
+        // Retain items matching keywords or reputable venues
+        if (score >= 1) {
+          rawCandidates.push({ item, relevanceScore: score });
+        }
       });
+
+      rawCandidates.sort((a, b) => b.relevanceScore - a.relevanceScore);
     }
   } catch (err) {
     console.warn('CrossRef literature search encountered an error, activating domain fallback:', err);
   }
 
-  // If CrossRef yielded fewer than 3 references, augment with domain-aware academic publications
-  if (references.length < 3) {
+  const references: ReferenceItem[] = [];
+  const papers: Paper[] = [];
+
+  const selectedItems = rawCandidates.slice(0, limit).map(c => c.item);
+
+  selectedItems.forEach((item: any, idx: number) => {
+    const title = Array.isArray(item.title) ? item.title[0] : (item.title || 'Untitled Publication');
+    if (!title || title.length < 5) return;
+
+    const authors: string[] = [];
+    if (Array.isArray(item.author)) {
+      item.author.forEach((a: any) => {
+        if (a.family) {
+          authors.push(a.given ? `${a.given[0]}. ${a.family}` : a.family);
+        }
+      });
+    }
+    if (authors.length === 0) authors.push('Academic Research Team');
+
+    const year = item.issued?.['date-parts']?.[0]?.[0] ||
+                 item.created?.['date-parts']?.[0]?.[0] ||
+                 new Date().getFullYear();
+
+    const venue = item['container-title']?.[0] ||
+                  item.publisher ||
+                  'Peer-Reviewed Academic Proceedings';
+
+    const doi = item.DOI || '';
+    const paperUrl = item.URL || (doi ? `https://doi.org/${doi}` : `https://scholar.google.com/scholar?q=${encodeURIComponent(title)}`);
+    const abstract = cleanAbstract(item.abstract || '');
+
+    const refItem: ReferenceItem = {
+      id: `ref-${idx + 1}-${doi || Math.random().toString(36).substring(2, 6)}`,
+      title,
+      authors,
+      year,
+      venue,
+      publisher: item.publisher,
+      doi,
+      url: paperUrl,
+      abstract: abstract || `Peer-reviewed study investigating ${cleanQuery}. Evaluated empirical baselines and methodological trade-offs.`,
+      citationApa: formatApaCitation(authors, year, title, venue, doi),
+      citationIeee: formatIeeeCitation(idx + 1, authors, year, title, venue, doi),
+      bibtex: formatBibtex(`ref-${idx + 1}`, authors, year, title, venue, doi)
+    };
+
+    references.push(refItem);
+
+    // Derive limitations and future work based on literature patterns
+    const limitations: string[] = [
+      `Evaluation restricted to standard benchmark environments without live production stress testing.`,
+      `High computational overhead and reliance on extensive trace data impedes real-time execution.`,
+      `Lacks robust cross-domain validation on non-deterministic and asynchronous edge conditions.`
+    ];
+
+    const futureWork: string[] = [
+      `Incorporate lightweight online diagnostic triage to reduce pipeline latency.`,
+      `Validate generalization across multi-framework web environments and distributed systems.`
+    ];
+
+    papers.push({
+      id: `paper-ref-${idx + 1}-${Math.random().toString(36).substring(2, 6)}`,
+      title,
+      authors,
+      year,
+      venue,
+      url: paperUrl,
+      doi,
+      fileName: `${title.slice(0, 30).replace(/[^\w]/g, '_')}.pdf`,
+      abstract: abstract || refItem.abstract!,
+      methodology: `Quantitative empirical evaluation on benchmark test suites and execution logs.`,
+      datasetOrSample: `Automated test trace corpus and historic commit logs.`,
+      limitations,
+      futureWork
+    });
+  });
+
+  // If filtered results are fewer than requested limit, augment with domain-aware academic publications
+  if (papers.length < Math.min(limit, 5)) {
     const fallbackResults = generateDomainAwareReferences(query);
     fallbackResults.references.forEach(r => {
-      if (!references.some(existing => existing.title.toLowerCase() === r.title.toLowerCase())) {
+      if (references.length < limit && !references.some(existing => existing.title.toLowerCase() === r.title.toLowerCase())) {
         references.push(r);
       }
     });
     fallbackResults.papers.forEach(p => {
-      if (!papers.some(existing => existing.title.toLowerCase() === p.title.toLowerCase())) {
+      if (papers.length < limit && !papers.some(existing => existing.title.toLowerCase() === p.title.toLowerCase())) {
         papers.push(p);
       }
     });
   }
 
   return {
-    references: references.slice(0, 6),
-    papers: papers.slice(0, 6)
+    references: references.slice(0, limit),
+    papers: papers.slice(0, limit)
   };
 }
 

@@ -31,6 +31,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
   const [manualTitle, setManualTitle] = useState('');
   const [manualUrl, setManualUrl] = useState('');
   const [manualText, setManualText] = useState('');
+  const [paperCountLimit, setPaperCountLimit] = useState<number>(10);
 
   // 4-Member Group Component state
   const [showGroupInputs, setShowGroupInputs] = useState(false);
@@ -79,6 +80,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
       setStatusText(`Analyzing proposal & discovering references from academic literature...`);
       const formData = new FormData();
       formData.append('file', proposalFile);
+      formData.append('limit', String(paperCountLimit));
       if (apiKey) formData.append('apiKey', apiKey);
       if (engine) formData.append('model', engine);
 
@@ -141,6 +143,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
     const formData = new FormData();
     if (manualTitle.trim()) formData.append('title', manualTitle.trim());
     if (manualText.trim()) formData.append('text', manualText.trim());
+    formData.append('limit', String(paperCountLimit));
     if (apiKey) formData.append('apiKey', apiKey);
     if (engine) formData.append('model', engine);
     if (memberComponents.member1.trim()) formData.append('member1', memberComponents.member1.trim());
@@ -435,6 +438,30 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Literature Depth Selection */}
+          <div className="flex flex-wrap items-center justify-between gap-3 p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80">
+            <div className="flex items-center space-x-2">
+              <BookOpen className="h-4 w-4 text-blue-400" />
+              <span className="text-xs font-semibold text-slate-300">Literature Depth (Papers to Analyze):</span>
+            </div>
+            <div className="flex items-center space-x-1.5 bg-slate-900 p-1 rounded-lg border border-slate-800 text-xs font-semibold">
+              {[5, 10, 15, 20].map((num) => (
+                <button
+                  key={num}
+                  type="button"
+                  onClick={() => setPaperCountLimit(num)}
+                  className={`px-2.5 py-1 rounded transition cursor-pointer ${
+                    paperCountLimit === num
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  {num} Papers {num === 10 ? '★' : ''}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-3 pt-1">

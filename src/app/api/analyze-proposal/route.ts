@@ -55,9 +55,10 @@ export async function POST(req: NextRequest) {
     }
 
     const searchQuery = `${proposalTitle} ${proposalText.slice(0, 200)}`.trim();
+    const requestedLimit = parseInt((formData.get('limit') as string) || '10', 10) || 10;
 
     // 1. Search academic literature for relevant peer-reviewed papers
-    const { references, papers: retrievedPapers } = await searchAcademicLiterature(searchQuery, 5);
+    const { references, papers: retrievedPapers } = await searchAcademicLiterature(searchQuery, requestedLimit);
 
     // 2. Synthesize gaps comparing the proposal against the retrieved literature
     const synthesis = await synthesizeResearchGaps(retrievedPapers, apiKey || undefined, model);
