@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ResGap — Academic Research Gap Finder & Literature Synthesizer
 
-## Getting Started
+**ResGap** is a full-stack academic research assistant application designed to systematically ingest peer-reviewed papers (via PDF or text), extract methodology, datasets, constraints, and stated limitations, and synthesize publishable **Research Gaps (Methodological, Empirical, Contextual, Practical, and Theoretical)** along with formulated **Research Questions (RQs)** and a comparative literature matrix.
 
-First, run the development server:
+---
 
+## ✨ Features
+
+- 📄 **Multi-PDF Parsing & Ingestion**:
+  - Drag-and-drop or batch file upload for academic papers.
+  - Smart section segmentation extracting Title, Abstract, Methodology, Datasets, Limitations, and Future Directions.
+  - Manual text/abstract paste option.
+- 🔬 **Systematic Gap Synthesis**:
+  - Cross-examines multiple papers to isolate overlapping boundaries and unaddressed constraints.
+  - Standardized Academic Taxonomy:
+    - 🧪 **Methodological Gaps**: Benchmark/metric limitations, calibration flaws, baseline oversights.
+    - 📊 **Empirical / Data Gaps**: Synthetic vs real-world data skew, non-IID distributions, cohort imbalances.
+    - 🌍 **Contextual / Demographic Gaps**: Geographic biases, language family gaps, demographic underrepresentation.
+    - ⚙️ **Practical / Systems Gaps**: Inference latency, energy budgets, memory footprints, hardware throttling.
+    - 🧩 **Theoretical Gaps**: Trade-offs between formal guarantees (e.g., differential privacy) and utility fairness.
+- 🎯 **Actionable Research Agendas & Formulated RQs**:
+  - Auto-formulates precise, publication-ready Research Questions (e.g., *RQ1: To what extent does...*).
+  - Categorizes project proposals by venue tier (Conference, Journal, Workshop) and difficulty (Novice, Intermediate, Advanced).
+- 📊 **Comparative Literature Matrix**:
+  - Generates cross-paper comparison table comparing methods, samples, limitations, and future directions.
+- 📥 **Export Ready for Thesis & Papers**:
+  - Export full synthesis as a formatted Markdown Literature Review section (`.md`) or structured JSON.
+- 🚀 **Dual Inference Modes**:
+  - **Built-in Deterministic NLP Engine**: 100% offline, free, and zero API key needed.
+  - **Gemini API Mode**: Optional deep LLM reasoning for complex, nuanced papers.
+- 📚 **Pre-loaded Academic Samples**:
+  - 1-Click "Load 3 Sample Papers" across Medical Multimodal AI, Edge Model Quantization, and Federated Healthcare Privacy.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4 (Glassmorphic dark academic theme)
+- **Icons**: Lucide React
+- **Parsing**: Node.js buffer stream parsing + Academic section heuristics
+
+---
+
+## 🚀 Getting Started
+
+### 1. Install Dependencies
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Run the Development Server
+```bash
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Build for Production
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📖 How to Use
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Add Papers**:
+   - Click **"Load 3 Sample Papers"** for an instant demonstration, or
+   - Drag & drop your own downloaded `.pdf` papers into the upload zone, or
+   - Paste paper abstracts and limitation sections under the **"Paste Text / Abstract"** tab.
+2. **Review Extracted Data**:
+   - Expand any paper card to inspect the extracted Abstract, Methodology, Limitations, and Future Work.
+3. **Synthesize**:
+   - Click **"Synthesize Gaps"** in the top navigation or banner.
+4. **Explore & Export**:
+   - Filter gaps by category (*Methodological*, *Empirical*, *Contextual*, *Practical*, *Theoretical*).
+   - Click the copy icon next to any Research Question.
+   - Click **"Export"** to download the ready-to-use Literature Review markdown or JSON.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🔒 Privacy & Local Execution
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+When using the default **Built-in NLP** mode, all analysis is computed locally without transmitting manuscript data to any external cloud provider.
