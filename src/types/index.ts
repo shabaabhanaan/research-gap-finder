@@ -74,11 +74,18 @@ export interface ReferenceItem {
   bibtex?: string;
 }
 
+export interface GapReferenceLink {
+  referenceTitle: string;
+  referenceUrl?: string;
+  citation?: string;
+}
+
 export interface MemberResearchGapItem {
   point: string;
   referenceTitle: string;
   referenceUrl?: string;
   citation?: string;
+  references?: GapReferenceLink[];
 }
 
 export interface MemberComponent {

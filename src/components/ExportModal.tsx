@@ -54,7 +54,12 @@ ${(synthesis.memberComponents || []).map(m => `### Member ${m.memberNumber}: ${m
 - **Role & Scope**: ${m.scopeAndRole}
 - **Individual Research Gaps (Point Form - 3+ Literature Voids)**:
 ${(m.individualResearchGaps && m.individualResearchGaps.length > 0)
-  ? m.individualResearchGaps.map((g, i) => `  * **Gap ${i + 1}**: ${g.point}\n    - *Literature Reference*: [${g.referenceTitle}](${g.referenceUrl || ''}) (${g.citation || '[Ref]'})`).join('\n')
+  ? m.individualResearchGaps.map((g, i) => {
+      const refs = (g.references && g.references.length > 0)
+        ? g.references.map(r => `[${r.referenceTitle}](${r.referenceUrl || ''}) (${r.citation || '[Ref]'})`).join('; ')
+        : `[${g.referenceTitle}](${g.referenceUrl || ''}) (${g.citation || '[Ref]'})`;
+      return `  * **Gap ${i + 1}**: ${g.point}\n    - *Supporting Literature*: ${refs}`;
+    }).join('\n')
   : (m.individualResearchGap || '').split('\n').map(l => `  * ${l}`).join('\n')
 }
 - **Research Questions (RQs)**:
@@ -159,12 +164,17 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
       <p><strong>Individual Research Gaps (Point Form - 3+ Literature Voids):</strong></p>
       <ul>
         ${(m.individualResearchGaps && m.individualResearchGaps.length > 0)
-          ? m.individualResearchGaps.map((g, i) => `
-            <li style="margin-bottom: 6pt;">
-              <strong>Gap ${i + 1}:</strong> ${g.point}<br/>
-              <span class="badge">Reference: <a href="${g.referenceUrl || '#'}" target="_blank">${g.referenceTitle}</a> (${g.citation || ''})</span>
-            </li>
-          `).join('')
+          ? m.individualResearchGaps.map((g, i) => {
+              const refs = (g.references && g.references.length > 0)
+                ? g.references.map(r => `<span class="badge" style="margin-right: 4pt; display: inline-block; margin-top: 2pt;">Reference: <a href="${r.referenceUrl || '#'}" target="_blank">${r.referenceTitle}</a> (${r.citation || ''})</span>`).join(' ')
+                : `<span class="badge">Reference: <a href="${g.referenceUrl || '#'}" target="_blank">${g.referenceTitle}</a> (${g.citation || ''})</span>`;
+              return `
+                <li style="margin-bottom: 6pt;">
+                  <strong>Gap ${i + 1}:</strong> ${g.point}<br/>
+                  ${refs}
+                </li>
+              `;
+            }).join('')
           : `<li>${m.individualResearchGap}</li>`
         }
       </ul>
@@ -474,29 +484,43 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
 
                           {m.individualResearchGaps && m.individualResearchGaps.length > 0 ? (
                             <div className="space-y-2">
-                              {m.individualResearchGaps.map((g, gi) => (
-                                <div key={gi} className="space-y-1 bg-white p-2.5 rounded-lg border border-amber-200/80">
-                                  <div className="font-medium text-slate-900 flex items-start gap-1.5">
-                                    <span className="font-mono font-bold text-amber-800 shrink-0">•</span>
-                                    <span>{g.point}</span>
-                                  </div>
-                                  {g.referenceTitle && (
-                                    <div className="pl-3.5 pt-1 flex flex-wrap items-center gap-1.5 text-[11px]">
-                                      <span className="font-bold text-amber-900 text-[10px]">{g.citation || '[Ref]'}</span>
-                                      <a
-                                        href={g.referenceUrl || `https://scholar.google.com/scholar?q=${encodeURIComponent(g.referenceTitle)}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1 font-semibold text-emerald-800 hover:text-emerald-950 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 hover:underline"
-                                      >
-                                        <BookOpen className="h-3 w-3 text-emerald-700 shrink-0" />
-                                        <span className="truncate max-w-[240px] sm:max-w-md">{g.referenceTitle}</span>
-                                        <ExternalLink className="h-2.5 w-2.5 text-emerald-600 shrink-0" />
-                                      </a>
+                              {m.individualResearchGaps.map((g, gi) => {
+                                const refList = (g.references && g.references.length > 0)
+                                  ? g.references
+                                  : [
+                                      {
+                                        referenceTitle: g.referenceTitle,
+                                        referenceUrl: g.referenceUrl,
+                                        citation: g.citation
+                                      }
+                                    ];
+
+                                return (
+                                  <div key={gi} className="space-y-1.5 bg-white p-2.5 rounded-lg border border-amber-200/80">
+                                    <div className="font-medium text-slate-900 flex items-start gap-1.5">
+                                      <span className="font-mono font-bold text-amber-800 shrink-0">•</span>
+                                      <span>{g.point}</span>
                                     </div>
-                                  )}
-                                </div>
-                              ))}
+                                    <div className="pl-3.5 pt-1 border-t border-amber-100 flex flex-wrap items-center gap-1.5 text-[11px]">
+                                      {refList.map((ref, ri) => (
+                                        <a
+                                          key={ri}
+                                          href={ref.referenceUrl || `https://scholar.google.com/scholar?q=${encodeURIComponent(ref.referenceTitle)}`}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="inline-flex items-center gap-1 font-semibold text-emerald-800 hover:text-emerald-950 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 hover:underline"
+                                          title={ref.referenceTitle}
+                                        >
+                                          <span className="font-bold text-amber-900 text-[10px]">{ref.citation || `[Ref ${ri + 1}]`}</span>
+                                          <BookOpen className="h-3 w-3 text-emerald-700 shrink-0" />
+                                          <span className="truncate max-w-[200px] sm:max-w-xs">{ref.referenceTitle}</span>
+                                          <ExternalLink className="h-2.5 w-2.5 text-emerald-600 shrink-0" />
+                                        </a>
+                                      ))}
+                                    </div>
+                                  </div>
+                                );
+                              })}
                             </div>
                           ) : (
                             <p className="text-amber-900 leading-relaxed font-medium">{m.individualResearchGap}</p>
