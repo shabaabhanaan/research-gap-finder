@@ -13,7 +13,8 @@ import {
   FileDown, 
   Users, 
   Sparkles,
-  Layers
+  Layers,
+  ExternalLink
 } from 'lucide-react';
 import { SynthesisResult } from '@/types';
 
@@ -51,7 +52,11 @@ ${synthesis.summary}
 
 ${(synthesis.memberComponents || []).map(m => `### Member ${m.memberNumber}: ${m.componentTitle}
 - **Role & Scope**: ${m.scopeAndRole}
-- **Individual Research Gap**: ${m.individualResearchGap}
+- **Individual Research Gaps (Point Form - 3+ Literature Voids)**:
+${(m.individualResearchGaps && m.individualResearchGaps.length > 0)
+  ? m.individualResearchGaps.map((g, i) => `  * **Gap ${i + 1}**: ${g.point}\n    - *Literature Reference*: [${g.referenceTitle}](${g.referenceUrl || ''}) (${g.citation || '[Ref]'})`).join('\n')
+  : (m.individualResearchGap || '').split('\n').map(l => `  * ${l}`).join('\n')
+}
 - **Research Questions (RQs)**:
 ${m.individualResearchQuestions.map(q => `  * ${q}`).join('\n')}
 - **Proposed Methodology**: ${m.proposedMethodology}
@@ -151,7 +156,18 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
     <div class="card">
       <h3>Member ${m.memberNumber}: ${m.componentTitle}</h3>
       <p><strong>Role & Scope:</strong> ${m.scopeAndRole}</p>
-      <p><strong>Individual Research Gap:</strong> ${m.individualResearchGap}</p>
+      <p><strong>Individual Research Gaps (Point Form - 3+ Literature Voids):</strong></p>
+      <ul>
+        ${(m.individualResearchGaps && m.individualResearchGaps.length > 0)
+          ? m.individualResearchGaps.map((g, i) => `
+            <li style="margin-bottom: 6pt;">
+              <strong>Gap ${i + 1}:</strong> ${g.point}<br/>
+              <span class="badge">Reference: <a href="${g.referenceUrl || '#'}" target="_blank">${g.referenceTitle}</a> (${g.citation || ''})</span>
+            </li>
+          `).join('')
+          : `<li>${m.individualResearchGap}</li>`
+        }
+      </ul>
       <p><strong>Individual Research Questions (RQs):</strong></p>
       <ul>${m.individualResearchQuestions.map(q => `<li><strong>${q}</strong></li>`).join('')}</ul>
       <p><strong>Methodology:</strong> ${m.proposedMethodology}</p>
@@ -447,8 +463,44 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
                         <h4 className="text-sm font-bold text-slate-900">{m.componentTitle}</h4>
                         <p className="text-xs text-slate-600 leading-relaxed">{m.scopeAndRole}</p>
                         
-                        <div className="p-2.5 rounded-lg bg-amber-50/60 border border-amber-200 text-xs text-amber-900">
-                          <strong>Individual Gap:</strong> {m.individualResearchGap}
+                        {/* Individual Research Gaps in Point Form (3+ points) with Highlighted Real References */}
+                        <div className="p-3 rounded-xl bg-amber-50/60 border border-amber-200 text-xs space-y-2">
+                          <div className="font-bold uppercase tracking-wider text-amber-900 text-[11px] flex items-center justify-between">
+                            <span>Individual Research Gaps (Point Form - 3+ Voids):</span>
+                            <span className="text-[10px] font-semibold text-amber-800 bg-amber-100/80 px-2 py-0.5 rounded-full">
+                              Verified Literature Links
+                            </span>
+                          </div>
+
+                          {m.individualResearchGaps && m.individualResearchGaps.length > 0 ? (
+                            <div className="space-y-2">
+                              {m.individualResearchGaps.map((g, gi) => (
+                                <div key={gi} className="space-y-1 bg-white p-2.5 rounded-lg border border-amber-200/80">
+                                  <div className="font-medium text-slate-900 flex items-start gap-1.5">
+                                    <span className="font-mono font-bold text-amber-800 shrink-0">•</span>
+                                    <span>{g.point}</span>
+                                  </div>
+                                  {g.referenceTitle && (
+                                    <div className="pl-3.5 pt-1 flex flex-wrap items-center gap-1.5 text-[11px]">
+                                      <span className="font-bold text-amber-900 text-[10px]">{g.citation || '[Ref]'}</span>
+                                      <a
+                                        href={g.referenceUrl || `https://scholar.google.com/scholar?q=${encodeURIComponent(g.referenceTitle)}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1 font-semibold text-emerald-800 hover:text-emerald-950 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 hover:underline"
+                                      >
+                                        <BookOpen className="h-3 w-3 text-emerald-700 shrink-0" />
+                                        <span className="truncate max-w-[240px] sm:max-w-md">{g.referenceTitle}</span>
+                                        <ExternalLink className="h-2.5 w-2.5 text-emerald-600 shrink-0" />
+                                      </a>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-amber-900 leading-relaxed font-medium">{m.individualResearchGap}</p>
+                          )}
                         </div>
 
                         <div className="space-y-1">

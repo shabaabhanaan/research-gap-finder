@@ -74,12 +74,20 @@ export interface ReferenceItem {
   bibtex?: string;
 }
 
+export interface MemberResearchGapItem {
+  point: string;
+  referenceTitle: string;
+  referenceUrl?: string;
+  citation?: string;
+}
+
 export interface MemberComponent {
   memberNumber: number; // 1, 2, 3, 4
   memberName?: string;
   componentTitle: string;
   scopeAndRole: string;
   individualResearchGap: string;
+  individualResearchGaps: MemberResearchGapItem[];
   individualResearchQuestions: string[];
   proposedMethodology: string;
   datasetOrEvaluation: string;

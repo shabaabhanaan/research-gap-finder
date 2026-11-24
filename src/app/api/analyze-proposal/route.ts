@@ -63,13 +63,19 @@ export async function POST(req: NextRequest) {
     // 2. Synthesize gaps comparing the proposal against the retrieved literature
     const synthesis = await synthesizeResearchGaps(retrievedPapers, apiKey || undefined, model);
 
-    // 3. Decompose project into 4 individual member components
+    // 3. Decompose project into 4 individual member components with real references
     const customMemberFocus: { [key: number]: string } = {};
     for (let m = 1; m <= 4; m++) {
       const val = formData.get(`member${m}`) as string | null;
       if (val && val.trim()) customMemberFocus[m] = val.trim();
     }
-    const memberComponents = decomposeInto4MemberComponents(proposalTitle || 'Research Project', proposalText, customMemberFocus);
+    const memberComponents = decomposeInto4MemberComponents(
+      proposalTitle || 'Research Project',
+      proposalText,
+      customMemberFocus,
+      references,
+      retrievedPapers
+    );
 
     // 4. Attach proposal metadata, retrieved academic references, and 4-member breakdown
     const finalResult: SynthesisResult = {

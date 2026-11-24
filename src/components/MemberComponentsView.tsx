@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Users, Check, Copy, Sparkles, BookOpen, Layers, Target, Cpu } from 'lucide-react';
+import { Users, Check, Copy, BookOpen, ExternalLink, Sparkles } from 'lucide-react';
 import { MemberComponent } from '@/types';
 
 interface MemberComponentsViewProps {
@@ -48,11 +48,21 @@ export const MemberComponentsView: React.FC<MemberComponentsViewProps> = ({ comp
     }
   };
 
+  const formatGapsText = (member: MemberComponent): string => {
+    if (member.individualResearchGaps && member.individualResearchGaps.length > 0) {
+      return member.individualResearchGaps
+        .map((g, idx) => `  * **Gap ${idx + 1}**: ${g.point}\n    - Real Literature Link: ${g.referenceTitle} (${g.referenceUrl || 'N/A'})\n    - Citation: ${g.citation || '[Ref]'}`)
+        .join('\n');
+    }
+    return `  * ${member.individualResearchGap}`;
+  };
+
   const handleCopySingle = (member: MemberComponent) => {
     const text = `### [Member ${member.memberNumber} Component] ${member.componentTitle}
 - **Role & Scope**: ${member.scopeAndRole}
-- **Individual Research Gap**: ${member.individualResearchGap}
-- **Individual Research Questions**:
+- **Individual Research Gaps (Point Form - 3+ Literature Voids)**:
+${formatGapsText(member)}
+- **Individual Research Questions (RQs)**:
 ${member.individualResearchQuestions.map(q => `  - ${q}`).join('\n')}
 - **Proposed Methodology**: ${member.proposedMethodology}
 - **Evaluation & Dataset**: ${member.datasetOrEvaluation}
@@ -70,7 +80,8 @@ ${member.expectedDeliverables.map(d => `  - ${d}`).join('\n')}
 
 ${components.map(m => `## Member ${m.memberNumber}: ${m.componentTitle}
 - **Scope & Role**: ${m.scopeAndRole}
-- **Individual Research Gap**: ${m.individualResearchGap}
+- **Individual Research Gaps (Point Form - 3+ Literature Voids)**:
+${formatGapsText(m)}
 - **Research Questions (RQs)**:
 ${m.individualResearchQuestions.map(q => `  * ${q}`).join('\n')}
 - **Proposed Methodology**: ${m.proposedMethodology}
@@ -101,7 +112,7 @@ ${m.expectedDeliverables.map(d => `  * ${d}`).join('\n')}
                 </span>
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
-                Deconstructed into 4 non-overlapping, individual research modules for group capstone or dissertation defense.
+                Each member component features 3+ distinct research gaps in point form with verified real literature reference links.
               </p>
             </div>
           </div>
@@ -168,18 +179,66 @@ ${m.expectedDeliverables.map(d => `  * ${d}`).join('\n')}
                   </p>
                 </div>
 
-                {/* Individual Research Gap */}
-                <div className="mt-3 space-y-1">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-amber-700 block">
-                    Individual Research Gap / Problem:
-                  </span>
-                  <p className="text-xs text-slate-800 leading-relaxed bg-amber-50/40 p-2.5 rounded-xl border border-amber-200/60">
-                    {member.individualResearchGap}
-                  </p>
+                {/* Individual Research Gaps in Point Form (3+ points with real highlighted references) */}
+                <div className="mt-3.5 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-amber-800 flex items-center gap-1.5">
+                      <Sparkles className="h-3.5 w-3.5 text-amber-600" />
+                      <span>Individual Research Gaps (3+ Empirical Voids):</span>
+                    </span>
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/80">
+                      Point Form • Cited
+                    </span>
+                  </div>
+
+                  <div className="space-y-2">
+                    {member.individualResearchGaps && member.individualResearchGaps.length > 0 ? (
+                      member.individualResearchGaps.map((gapItem, gIdx) => (
+                        <div
+                          key={gIdx}
+                          className="text-xs text-slate-800 bg-amber-50/40 border border-amber-200/80 p-3 rounded-xl leading-relaxed space-y-2"
+                        >
+                          {/* Point Description */}
+                          <div className="flex items-start gap-2.5">
+                            <span className="h-5 w-5 rounded-full bg-amber-100 text-amber-900 font-bold font-mono text-[10px] flex items-center justify-center shrink-0 mt-0.5 border border-amber-200">
+                              {gIdx + 1}
+                            </span>
+                            <div className="flex-1 font-medium text-slate-900">
+                              {gapItem.point}
+                            </div>
+                          </div>
+
+                          {/* Highlighted Real Reference Link */}
+                          {gapItem.referenceTitle && (
+                            <div className="ml-7 pt-1.5 border-t border-amber-200/60 flex flex-wrap items-center gap-1.5 text-[11px]">
+                              <span className="font-bold text-amber-900 text-[10px] uppercase tracking-wide">
+                                {gapItem.citation || '[Literature Reference]'}
+                              </span>
+                              <a
+                                href={gapItem.referenceUrl || `https://scholar.google.com/scholar?q=${encodeURIComponent(gapItem.referenceTitle)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 font-semibold text-emerald-800 hover:text-emerald-950 bg-white hover:bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-300/80 shadow-xs transition hover:underline"
+                                title="Open verified academic reference"
+                              >
+                                <BookOpen className="h-3 w-3 text-emerald-700 shrink-0" />
+                                <span className="truncate max-w-[240px] sm:max-w-xs">{gapItem.referenceTitle}</span>
+                                <ExternalLink className="h-2.5 w-2.5 text-emerald-600 shrink-0" />
+                              </a>
+                            </div>
+                          )}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-xs text-slate-800 leading-relaxed bg-amber-50/40 p-2.5 rounded-xl border border-amber-200/60">
+                        {member.individualResearchGap}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Individual Research Questions */}
-                <div className="mt-3 space-y-1.5">
+                <div className="mt-3.5 space-y-1.5">
                   <span className="text-[11px] font-semibold uppercase tracking-wider text-[#0d3326] block">
                     Independent Research Questions (RQs):
                   </span>

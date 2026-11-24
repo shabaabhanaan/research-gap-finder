@@ -258,9 +258,15 @@ export function runBuiltInAcademicSynthesis(papers: Paper[]): SynthesisResult {
     };
   });
 
-  // Decompose into 4-Member Group Components
+  // Decompose into 4-Member Group Components with real references
   const primaryTitle = papers[0]?.title || 'Research Project Synthesis';
-  const memberComponents: MemberComponent[] = decomposeInto4MemberComponents(primaryTitle);
+  const memberComponents: MemberComponent[] = decomposeInto4MemberComponents(
+    primaryTitle,
+    undefined,
+    undefined,
+    references,
+    papers
+  );
 
   return {
     domain,
