@@ -23,16 +23,21 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-6 text-slate-100">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-          <div className="flex items-center space-x-2">
-            <Cpu className="h-5 w-5 text-blue-400" />
-            <h3 className="font-semibold text-lg text-white">Synthesis Engine Settings</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="w-full max-w-md bg-white border border-slate-200/90 rounded-2xl shadow-2xl overflow-hidden p-6 text-slate-800">
+        <div className="flex items-center justify-between pb-4 border-b border-slate-200">
+          <div className="flex items-center space-x-2.5">
+            <div className="h-8 w-8 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-[#0d3326]">
+              <Cpu className="h-4 w-4" />
+            </div>
+            <div>
+              <h3 className="font-bold text-base text-slate-900">Synthesis Engine Settings</h3>
+              <p className="text-xs text-slate-500">Choose inference reasoning mode</p>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition cursor-pointer"
           >
             <X className="h-5 w-5" />
           </button>
@@ -41,40 +46,40 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         <div className="mt-5 space-y-5">
           {/* Engine Selector */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
               Inference Mode
             </label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2.5">
               <button
                 type="button"
                 onClick={() => setEngine('local')}
-                className={`p-3 rounded-xl border text-left transition cursor-pointer ${
+                className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
                   engine === 'local'
-                    ? 'border-blue-500 bg-blue-500/10 text-white'
-                    : 'border-slate-800 bg-slate-800/40 text-slate-400 hover:border-slate-700'
+                    ? 'border-emerald-700 bg-emerald-50/60 text-slate-900 shadow-xs'
+                    : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
                 }`}
               >
-                <div className="flex items-center space-x-1.5 font-medium text-sm text-slate-200">
-                  <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                <div className="flex items-center space-x-1.5 font-bold text-sm text-[#0d3326]">
+                  <ShieldCheck className="h-4 w-4 text-emerald-600" />
                   <span>Built-in NLP</span>
                 </div>
-                <p className="text-xs text-slate-400 mt-1">100% Free & Offline. No API Key required.</p>
+                <p className="text-xs text-slate-500 mt-1">100% Free & Offline. No API Key required.</p>
               </button>
 
               <button
                 type="button"
                 onClick={() => setEngine('gemini')}
-                className={`p-3 rounded-xl border text-left transition cursor-pointer ${
+                className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
                   engine === 'gemini'
-                    ? 'border-indigo-500 bg-indigo-500/10 text-white'
-                    : 'border-slate-800 bg-slate-800/40 text-slate-400 hover:border-slate-700'
+                    ? 'border-emerald-700 bg-emerald-50/60 text-slate-900 shadow-xs'
+                    : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
                 }`}
               >
-                <div className="flex items-center space-x-1.5 font-medium text-sm text-slate-200">
-                  <Key className="h-4 w-4 text-indigo-400" />
+                <div className="flex items-center space-x-1.5 font-bold text-sm text-[#0d3326]">
+                  <Key className="h-4 w-4 text-emerald-600" />
                   <span>Gemini API</span>
                 </div>
-                <p className="text-xs text-slate-400 mt-1">Deep LLM reasoning across complex papers.</p>
+                <p className="text-xs text-slate-500 mt-1">Deep LLM reasoning across complex papers.</p>
               </button>
             </div>
           </div>
@@ -82,7 +87,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           {/* API Key Input */}
           {engine === 'gemini' && (
             <div className="space-y-1.5 animate-in fade-in slide-in-from-top-2 duration-150">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600">
                 Gemini API Key
               </label>
               <input
@@ -90,7 +95,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 placeholder="AIzaSy..."
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#f8faf9] border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition"
               />
               <p className="text-[11px] text-slate-500">
                 Key is stored only in your browser session and used solely to analyze the uploaded text.
@@ -98,10 +103,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
           )}
 
-          <div className="pt-3 border-t border-slate-800 flex justify-end">
+          <div className="pt-3 border-t border-slate-200 flex justify-end">
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition cursor-pointer shadow-md shadow-blue-600/20"
+              className="px-5 py-2 rounded-xl bg-[#0d3326] hover:bg-[#124232] text-white text-xs font-bold transition cursor-pointer shadow-xs"
             >
               Done
             </button>

@@ -104,7 +104,7 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
 `).join('\n')}
 
 ---
-*Exported with ResGap — Academic Literature & Research Gap Discovery Engine*
+*Exported with ResGap AI — Systematic Academic Literature & Research Gap Discovery Engine*
 `;
   };
 
@@ -118,21 +118,20 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
 
   // 3. Generate Standard Microsoft Word HTML Document
   const generateWordHtml = (): string => {
-    const md = generateMarkdown();
     return `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
 <head>
   <meta charset='utf-8'>
   <title>${projectTitle}</title>
   <style>
     body { font-family: 'Calibri', 'Times New Roman', serif; font-size: 11pt; line-height: 1.5; color: #1e293b; margin: 40pt; }
-    h1 { font-size: 20pt; color: #1e3a8a; text-align: center; margin-bottom: 6pt; }
+    h1 { font-size: 20pt; color: #0c2e22; text-align: center; margin-bottom: 6pt; }
     .subtitle { text-align: center; font-size: 11pt; color: #64748b; margin-bottom: 24pt; }
-    h2 { font-size: 14pt; color: #1e3a8a; border-bottom: 1.5pt solid #2563eb; padding-bottom: 3pt; margin-top: 20pt; }
+    h2 { font-size: 14pt; color: #0c2e22; border-bottom: 1.5pt solid #059669; padding-bottom: 3pt; margin-top: 20pt; }
     h3 { font-size: 12pt; color: #0f172a; margin-top: 14pt; }
     table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
     th, td { border: 1pt solid #cbd5e1; padding: 6pt 8pt; text-align: left; font-size: 9.5pt; vertical-align: top; }
     th { background-color: #f1f5f9; font-weight: bold; color: #1e293b; }
-    .badge { font-size: 8.5pt; font-weight: bold; padding: 2pt 6pt; background-color: #e0f2fe; color: #0369a1; border-radius: 4pt; }
+    .badge { font-size: 8.5pt; font-weight: bold; padding: 2pt 6pt; background-color: #ecfdf5; color: #065f46; border-radius: 4pt; }
     .card { background-color: #f8fafc; border: 1pt solid #e2e8f0; padding: 10pt; border-radius: 6pt; margin-bottom: 10pt; }
     ul { margin: 4pt 0 8pt 16pt; }
     li { margin-bottom: 3pt; }
@@ -162,7 +161,7 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
     </div>
   `).join('')}
 
-  <h2>3. Systematic Literature Review Matrix</h2>
+  <h2>3. Comparative Literature Review Matrix</h2>
   <table>
     <thead>
       <tr>
@@ -187,7 +186,7 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
   </table>
 
   <h2>4. Taxonomy of Identified Research Gaps</h2>
-  ${synthesis.gaps.map((gap, i) => `
+  ${synthesis.gaps.map((gap) => `
     <div class="card">
       <h3>[${gap.category.toUpperCase()}] ${gap.title} (Severity: ${gap.severity})</h3>
       <p>${gap.description}</p>
@@ -203,7 +202,7 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
   </ul>
 
   <p style="text-align: center; color: #94a3b8; font-size: 8.5pt; margin-top: 30pt;">
-    Exported from ResGap — Academic Literature & Research Gap Discovery Engine
+    Exported from ResGap AI — Systematic Academic Literature & Research Gap Discovery Engine
   </p>
 </body>
 </html>`;
@@ -283,37 +282,37 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="w-full max-w-5xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden text-slate-100 flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="w-full max-w-5xl bg-white border border-slate-200/90 rounded-2xl shadow-2xl overflow-hidden text-slate-800 flex flex-col max-h-[92vh]">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/60">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-white">
           <div className="flex items-center space-x-2.5">
-            <span className="p-2 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+            <span className="p-2 rounded-xl bg-emerald-50 text-[#0d3326] border border-emerald-100">
               <Download className="h-5 w-5" />
             </span>
             <div>
-              <h3 className="font-bold text-base text-white">Standard Academic Literature & Proposal Export</h3>
-              <p className="text-xs text-slate-400">Formal document preview, Microsoft Word, BibTeX, and print-ready PDF</p>
+              <h3 className="font-bold text-base text-slate-900">Standard Academic Literature & Proposal Export</h3>
+              <p className="text-xs text-slate-500">Formal document preview, Microsoft Word, BibTeX, and print-ready PDF</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition cursor-pointer"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Toolbar: Format Selector & Standard Export Actions */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-3.5 bg-slate-950/40 border-b border-slate-800/80">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-3.5 bg-[#f8faf9] border-b border-slate-200">
           {/* Format Tabs */}
-          <div className="flex items-center space-x-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800">
+          <div className="flex items-center space-x-1.5 bg-white p-1 rounded-xl border border-slate-200">
             <button
               onClick={() => setActiveTab('document')}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition cursor-pointer ${
                 activeTab === 'document'
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-[#0d3326] text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <FileText className="h-3.5 w-3.5" />
@@ -323,8 +322,8 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
               onClick={() => setActiveTab('markdown')}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition cursor-pointer ${
                 activeTab === 'markdown'
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-[#0d3326] text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <FileDown className="h-3.5 w-3.5" />
@@ -334,8 +333,8 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
               onClick={() => setActiveTab('bibtex')}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition cursor-pointer ${
                 activeTab === 'bibtex'
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-[#0d3326] text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <BookOpen className="h-3.5 w-3.5" />
@@ -345,8 +344,8 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
               onClick={() => setActiveTab('json')}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition cursor-pointer ${
                 activeTab === 'json'
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-[#0d3326] text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <Code className="h-3.5 w-3.5" />
@@ -358,34 +357,34 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={handlePrint}
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer shadow-sm"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 transition cursor-pointer shadow-xs"
               title="Print standard academic report or Save as PDF"
             >
-              <Printer className="h-3.5 w-3.5 text-cyan-400" />
+              <Printer className="h-3.5 w-3.5 text-slate-500" />
               <span>Print / PDF</span>
             </button>
 
             <button
               onClick={handleDownloadWord}
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/60 transition cursor-pointer shadow-sm"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-[#0d3326] border border-emerald-200 transition cursor-pointer shadow-xs"
               title="Download Microsoft Word document (.doc)"
             >
-              <Download className="h-3.5 w-3.5 text-indigo-400" />
+              <Download className="h-3.5 w-3.5 text-emerald-700" />
               <span>Word (.doc)</span>
             </button>
 
             <button
               onClick={handleCopy}
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 transition cursor-pointer shadow-xs"
             >
-              {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5 text-slate-400" />}
+              {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5 text-slate-400" />}
               <span>{copied ? 'Copied!' : 'Copy'}</span>
             </button>
 
             {activeTab !== 'document' && (
               <button
                 onClick={handleDownload}
-                className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white transition cursor-pointer shadow-md shadow-blue-600/30"
+                className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#0d3326] hover:bg-[#124232] text-white transition cursor-pointer shadow-xs"
               >
                 <Download className="h-3.5 w-3.5" />
                 <span>Download {activeTab.toUpperCase()}</span>
@@ -395,36 +394,36 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
         </div>
 
         {/* Content View Area */}
-        <div className="flex-1 overflow-y-auto p-6 bg-slate-950/50">
+        <div className="flex-1 overflow-y-auto p-6 bg-[#f4f7f6]">
           {activeTab === 'document' ? (
             /* Rendered Standard Academic Document Preview */
             <div
               ref={printAreaRef}
-              className="max-w-4xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-8 sm:p-10 shadow-2xl text-slate-200 space-y-8"
+              className="max-w-4xl mx-auto bg-white border border-slate-200/90 rounded-2xl p-8 sm:p-10 shadow-xs text-slate-800 space-y-8"
             >
               {/* Document Header */}
-              <div className="text-center pb-6 border-b border-slate-800">
-                <span className="inline-block px-3 py-1 rounded-full text-[11px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-3">
+              <div className="text-center pb-6 border-b border-slate-200">
+                <span className="inline-block px-3 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 mb-3">
                   Systematic Literature Review & Capstone Research Proposal
                 </span>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
                   {projectTitle}
                 </h1>
-                <div className="flex flex-wrap items-center justify-center gap-4 mt-3 text-xs text-slate-400">
+                <div className="flex flex-wrap items-center justify-center gap-4 mt-3 text-xs text-slate-500">
                   <span><strong>Domain:</strong> {synthesis.domain}</span>
                   <span>•</span>
                   <span><strong>Date:</strong> {new Date(synthesis.timestamp).toLocaleDateString()}</span>
                   <span>•</span>
-                  <span><strong>Status:</strong> Proposal Stage</span>
+                  <span className="font-semibold text-emerald-700">Proposal Stage</span>
                 </div>
               </div>
 
               {/* 1. Executive Summary */}
               <div>
-                <h2 className="text-base font-bold text-blue-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+                <h2 className="text-base font-bold text-slate-900 uppercase tracking-wider mb-2 flex items-center gap-2">
                   <span>1. Executive Summary & Problem Scope</span>
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed bg-slate-950/60 p-4 rounded-xl border border-slate-800/80">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed bg-[#f8faf9] p-4 rounded-xl border border-slate-200/80">
                   {synthesis.summary}
                 </p>
               </div>
@@ -432,30 +431,30 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
               {/* 2. 4-Member Research Group Breakdown */}
               {synthesis.memberComponents && synthesis.memberComponents.length > 0 && (
                 <div>
-                  <h2 className="text-base font-bold text-indigo-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <Users className="h-4 w-4" />
+                  <h2 className="text-base font-bold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <Users className="h-4 w-4 text-emerald-700" />
                     <span>2. 4-Member Research Group Work Breakdown Structure</span>
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {synthesis.memberComponents.map(m => (
-                      <div key={m.memberNumber} className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5">
-                        <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                          <span className="text-xs font-mono font-bold text-indigo-400 bg-indigo-950/80 px-2.5 py-0.5 rounded border border-indigo-800/50">
-                            Member {m.memberNumber}
+                      <div key={m.memberNumber} className="p-4 rounded-xl bg-[#f8faf9] border border-slate-200 space-y-2.5">
+                        <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                          <span className="text-xs font-mono font-bold text-[#0d3326] bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
+                            Member #{m.memberNumber}
                           </span>
-                          <span className="text-[11px] text-slate-400 font-medium">Individual Component</span>
+                          <span className="text-[11px] text-slate-500 font-medium">Independent Sub-Project</span>
                         </div>
-                        <h4 className="text-sm font-bold text-white">{m.componentTitle}</h4>
-                        <p className="text-xs text-slate-300 leading-relaxed">{m.scopeAndRole}</p>
+                        <h4 className="text-sm font-bold text-slate-900">{m.componentTitle}</h4>
+                        <p className="text-xs text-slate-600 leading-relaxed">{m.scopeAndRole}</p>
                         
-                        <div className="p-2.5 rounded-lg bg-amber-950/20 border border-amber-900/30 text-xs text-amber-300/90">
+                        <div className="p-2.5 rounded-lg bg-amber-50/60 border border-amber-200 text-xs text-amber-900">
                           <strong>Individual Gap:</strong> {m.individualResearchGap}
                         </div>
 
                         <div className="space-y-1">
-                          <span className="text-[10px] font-bold uppercase text-cyan-400">Research Questions:</span>
+                          <span className="text-[10px] font-bold uppercase text-slate-500">Research Questions:</span>
                           {m.individualResearchQuestions.map((q, qi) => (
-                            <div key={qi} className="text-xs text-slate-300 bg-blue-950/30 p-1.5 rounded border border-blue-900/30 font-medium">
+                            <div key={qi} className="text-xs text-slate-800 bg-white p-2 rounded border border-slate-200/80 font-medium leading-relaxed">
                               {q}
                             </div>
                           ))}
@@ -468,27 +467,27 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
 
               {/* 3. Systematic Literature Matrix */}
               <div>
-                <h2 className="text-base font-bold text-cyan-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <Layers className="h-4 w-4" />
+                <h2 className="text-base font-bold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <Layers className="h-4 w-4 text-emerald-700" />
                   <span>3. Comparative Literature Review Matrix</span>
                 </h2>
-                <div className="overflow-x-auto rounded-xl border border-slate-800">
+                <div className="overflow-x-auto rounded-xl border border-slate-200">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="bg-slate-950 text-slate-400 font-semibold border-b border-slate-800">
+                      <tr className="bg-[#f8faf9] text-slate-700 font-semibold border-b border-slate-200">
                         <th className="py-2.5 px-3">Publication</th>
                         <th className="py-2.5 px-3">Methodology</th>
                         <th className="py-2.5 px-3">Dataset</th>
-                        <th className="py-2.5 px-3 text-amber-400">Primary Limitation</th>
+                        <th className="py-2.5 px-3 text-amber-700 bg-amber-50/50">Primary Limitation</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/70">
+                    <tbody className="divide-y divide-slate-100 bg-white">
                       {synthesis.comparativeMatrix.map((r, ri) => (
-                        <tr key={ri} className="hover:bg-slate-800/20">
-                          <td className="py-2.5 px-3 font-semibold text-white max-w-xs">{r.title}</td>
-                          <td className="py-2.5 px-3 text-slate-300 max-w-xs">{r.method}</td>
-                          <td className="py-2.5 px-3 text-slate-300 max-w-xs">{r.data}</td>
-                          <td className="py-2.5 px-3 text-amber-300 bg-amber-950/10 max-w-xs">{r.primaryLimitation}</td>
+                        <tr key={ri} className="hover:bg-slate-50">
+                          <td className="py-2.5 px-3 font-semibold text-slate-900 max-w-xs">{r.title}</td>
+                          <td className="py-2.5 px-3 text-slate-600 max-w-xs">{r.method}</td>
+                          <td className="py-2.5 px-3 text-slate-600 max-w-xs">{r.data}</td>
+                          <td className="py-2.5 px-3 text-amber-900 bg-amber-50/30 max-w-xs">{r.primaryLimitation}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -498,23 +497,23 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
 
               {/* 4. Identified Research Gaps */}
               <div>
-                <h2 className="text-base font-bold text-emerald-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" />
+                <h2 className="text-base font-bold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-emerald-700" />
                   <span>4. Core Synthesized Research Gaps</span>
                 </h2>
                 <div className="space-y-3">
                   {synthesis.gaps.map((gap, gi) => (
-                    <div key={gi} className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2">
+                    <div key={gi} className="p-4 rounded-xl bg-[#f8faf9] border border-slate-200 space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-semibold px-2 py-0.5 rounded bg-blue-500/10 text-blue-300 border border-blue-500/20 capitalize">
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 capitalize">
                           {gap.category} Gap
                         </span>
-                        <span className="text-xs text-red-400 font-semibold">Severity: {gap.severity}</span>
+                        <span className="text-xs text-rose-700 font-semibold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">Severity: {gap.severity}</span>
                       </div>
-                      <h4 className="text-sm font-bold text-white">{gap.title}</h4>
-                      <p className="text-xs text-slate-300 leading-relaxed">{gap.description}</p>
-                      <div className="text-xs text-slate-400">
-                        <strong>Proposed Methodology:</strong> {gap.suggestedMethodology}
+                      <h4 className="text-sm font-bold text-slate-900">{gap.title}</h4>
+                      <p className="text-xs text-slate-600 leading-relaxed">{gap.description}</p>
+                      <div className="text-xs text-slate-700 bg-white p-2.5 rounded-lg border border-slate-200/80">
+                        <strong className="text-slate-900">Proposed Methodology:</strong> {gap.suggestedMethodology}
                       </div>
                     </div>
                   ))}
@@ -524,11 +523,11 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
               {/* 5. References Bibliography */}
               {synthesis.references && synthesis.references.length > 0 && (
                 <div>
-                  <h2 className="text-base font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-2">
-                    <BookOpen className="h-4 w-4 text-blue-400" />
+                  <h2 className="text-base font-bold text-slate-900 uppercase tracking-wider mb-2 flex items-center gap-2">
+                    <BookOpen className="h-4 w-4 text-emerald-700" />
                     <span>5. Academic References & Literature Citations (IEEE Format)</span>
                   </h2>
-                  <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2 font-mono text-xs text-slate-300">
+                  <div className="p-4 rounded-xl bg-[#f8faf9] border border-slate-200 space-y-2 font-mono text-xs text-slate-700">
                     {synthesis.references.map((r, ri) => (
                       <div key={ri} className="leading-relaxed">
                         {r.citationIeee}
@@ -540,7 +539,7 @@ ${(synthesis.references || []).map((ref, idx) => `[${idx + 1}] ${ref.citationIee
             </div>
           ) : (
             /* Code / Text Formats View (Markdown, BibTeX, JSON) */
-            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs text-slate-300 leading-relaxed overflow-x-auto">
+            <div className="max-w-4xl mx-auto bg-white p-5 rounded-2xl border border-slate-200 shadow-xs font-mono text-xs text-slate-800 leading-relaxed overflow-x-auto">
               <pre className="whitespace-pre-wrap">{getActiveContent()}</pre>
             </div>
           )}
