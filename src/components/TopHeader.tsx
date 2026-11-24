@@ -9,7 +9,7 @@ import {
   Sparkles,
   Calendar,
   Layers,
-  Menu
+  Settings
 } from 'lucide-react';
 
 interface TopHeaderProps {
@@ -57,33 +57,25 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         </div>
       </div>
 
-      {/* Actions & Profile */}
-      <div className="flex items-center space-x-3">
-        {/* Notification Bell */}
-        <button className="p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition relative cursor-pointer">
-          <Bell className="h-4 w-4" />
-          <span className="h-2 w-2 rounded-full bg-emerald-500 absolute top-1.5 right-1.5 ring-2 ring-white" />
+      {/* Actions */}
+      <div className="flex items-center space-x-2 sm:space-x-3">
+        {/* Settings Button */}
+        <button
+          onClick={onOpenSettings}
+          className="p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition cursor-pointer"
+          title="Engine Settings"
+        >
+          <Settings className="h-4 w-4" />
         </button>
 
         {/* Export Button */}
         <button
           onClick={onOpenExport}
-          className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#f4f7f6] hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer"
+          className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#f4f7f6] hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer shadow-xs"
         >
           <Download className="h-3.5 w-3.5 text-slate-600" />
-          <span className="hidden sm:inline">Export</span>
+          <span>Export</span>
         </button>
-
-        {/* User Profile Pill (Like Labflow) */}
-        <div className="flex items-center space-x-2.5 pl-2 border-l border-slate-200">
-          <div className="h-8 w-8 rounded-full bg-[#0d3326] text-emerald-400 font-bold text-xs flex items-center justify-center ring-2 ring-emerald-500/30">
-            SH
-          </div>
-          <div className="hidden sm:block text-left">
-            <span className="text-xs font-bold text-slate-800 block leading-tight">Hanaan Shabaab</span>
-            <span className="text-[10px] text-slate-400 block">Principal Investigator</span>
-          </div>
-        </div>
       </div>
     </header>
   );
