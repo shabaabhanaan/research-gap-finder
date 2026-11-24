@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { BookOpen, Copy, Check, ExternalLink, Globe, FileCode2, Sparkles } from 'lucide-react';
+import { BookOpen, Copy, Check, ExternalLink, Globe } from 'lucide-react';
 import { ReferenceItem } from '@/types';
 
 interface ReferencesListProps {
@@ -36,30 +36,34 @@ export const ReferencesList: React.FC<ReferencesListProps> = ({ references, prop
   };
 
   return (
-    <div className="w-full mt-10 bg-slate-900/70 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm animate-in fade-in">
+    <div className="w-full mt-8 bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs animate-in fade-in">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200">
         <div>
-          <div className="flex items-center space-x-2">
-            <BookOpen className="h-5 w-5 text-blue-400" />
-            <h3 className="font-bold text-base text-white">
-              Academic Literature References & Benchmark Papers ({references.length})
-            </h3>
+          <div className="flex items-center space-x-2.5">
+            <div className="h-9 w-9 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-[#0d3326]">
+              <BookOpen className="h-4 w-4" />
+            </div>
+            <div>
+              <h3 className="font-bold text-base text-slate-900">
+                Academic Literature References & Benchmark Papers ({references.length})
+              </h3>
+              {proposalTitle && (
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Retrieved and verified peer publications related to: <span className="text-[#0d3326] font-semibold">{proposalTitle}</span>
+                </p>
+              )}
+            </div>
           </div>
-          {proposalTitle && (
-            <p className="text-xs text-slate-400 mt-1">
-              Retrieved and verified peer publications related to: <span className="text-blue-300 font-semibold">{proposalTitle}</span>
-            </p>
-          )}
         </div>
 
         {/* Citation Format Switcher & Copy All */}
         <div className="flex items-center space-x-2 shrink-0">
-          <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-semibold">
+          <div className="flex bg-[#f8faf9] p-1 rounded-xl border border-slate-200 text-xs font-semibold">
             <button
               onClick={() => setStyle('ieee')}
               className={`px-2.5 py-1 rounded-lg transition ${
-                style === 'ieee' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                style === 'ieee' ? 'bg-[#0d3326] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               IEEE
@@ -67,7 +71,7 @@ export const ReferencesList: React.FC<ReferencesListProps> = ({ references, prop
             <button
               onClick={() => setStyle('apa')}
               className={`px-2.5 py-1 rounded-lg transition ${
-                style === 'apa' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                style === 'apa' ? 'bg-[#0d3326] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               APA
@@ -75,7 +79,7 @@ export const ReferencesList: React.FC<ReferencesListProps> = ({ references, prop
             <button
               onClick={() => setStyle('bibtex')}
               className={`px-2.5 py-1 rounded-lg transition ${
-                style === 'bibtex' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                style === 'bibtex' ? 'bg-[#0d3326] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               BibTeX
@@ -84,16 +88,16 @@ export const ReferencesList: React.FC<ReferencesListProps> = ({ references, prop
 
           <button
             onClick={handleCopyAll}
-            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 transition"
           >
             {copiedId === 'all' ? (
               <>
-                <Check className="h-3.5 w-3.5 text-emerald-400" />
-                <span className="text-emerald-300">Copied All</span>
+                <Check className="h-3.5 w-3.5 text-emerald-600" />
+                <span className="text-emerald-700">Copied All</span>
               </>
             ) : (
               <>
-                <Copy className="h-3.5 w-3.5 text-slate-400" />
+                <Copy className="h-3.5 w-3.5 text-slate-500" />
                 <span>Copy All</span>
               </>
             )}
@@ -102,32 +106,32 @@ export const ReferencesList: React.FC<ReferencesListProps> = ({ references, prop
       </div>
 
       {/* References Grid */}
-      <div className="mt-5 space-y-3.5">
+      <div className="mt-5 space-y-3">
         {references.map((ref, idx) => {
           const displayCitation = style === 'ieee' ? ref.citationIeee : style === 'apa' ? ref.citationApa : (ref.bibtex || ref.citationIeee);
 
           return (
             <div
               key={ref.id}
-              className="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700 transition space-y-2.5"
+              className="p-4 rounded-xl bg-[#f8faf9] border border-slate-200/80 hover:border-slate-300 transition space-y-2.5"
             >
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
                 <div className="flex items-start space-x-2.5">
-                  <span className="shrink-0 flex items-center justify-center h-5 w-5 rounded bg-blue-950 text-blue-400 text-[11px] font-mono font-bold border border-blue-900/60 mt-0.5">
+                  <span className="shrink-0 flex items-center justify-center h-5 w-5 rounded bg-white text-[#0d3326] text-[11px] font-mono font-bold border border-slate-200 mt-0.5">
                     {idx + 1}
                   </span>
                   <div>
-                    <h4 className="text-sm font-semibold text-slate-100 leading-snug">
+                    <h4 className="text-sm font-semibold text-slate-900 leading-snug">
                       {ref.title}
                     </h4>
-                    <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-slate-400">
+                    <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-slate-500">
                       <span>{ref.authors.join(', ')}</span>
                       <span>•</span>
-                      <span className="text-slate-300 font-mono">[{ref.year}]</span>
+                      <span className="text-slate-700 font-mono font-medium">[{ref.year}]</span>
                       <span>•</span>
-                      <span className="italic text-slate-400">{ref.venue}</span>
+                      <span className="italic text-slate-600">{ref.venue}</span>
                       {ref.publisher && (
-                        <span className="px-1.5 py-0.2 rounded bg-slate-800/80 text-[10px] text-blue-300">
+                        <span className="px-1.5 py-0.2 rounded bg-slate-200/60 text-[10px] text-slate-700">
                           {ref.publisher}
                         </span>
                       )}
@@ -138,13 +142,13 @@ export const ReferencesList: React.FC<ReferencesListProps> = ({ references, prop
                 {/* Copy single citation */}
                 <button
                   onClick={() => handleCopy(displayCitation, ref.id)}
-                  className="shrink-0 inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition"
+                  className="shrink-0 inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 transition"
                   title="Copy citation to clipboard"
                 >
                   {copiedId === ref.id ? (
                     <>
-                      <Check className="h-3 w-3 text-emerald-400" />
-                      <span className="text-emerald-400 text-[11px]">Copied</span>
+                      <Check className="h-3 w-3 text-emerald-600" />
+                      <span className="text-emerald-700 text-[11px]">Copied</span>
                     </>
                   ) : (
                     <>
@@ -155,42 +159,42 @@ export const ReferencesList: React.FC<ReferencesListProps> = ({ references, prop
                 </button>
               </div>
 
-              {/* Formatted Citation String Box */}
-              <div className="bg-slate-900/90 rounded-lg p-2.5 font-mono text-[11px] text-slate-300 border border-slate-800/80 leading-relaxed overflow-x-auto whitespace-pre-wrap">
+              {/* Formatted Citation Block */}
+              <div className="bg-white p-3 rounded-lg border border-slate-200/80 font-mono text-[11px] text-slate-700 leading-relaxed break-words">
                 {displayCitation}
               </div>
 
-              {/* Links & Abstract snippet */}
-              <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs">
-                {ref.abstract && (
-                  <p className="text-[11px] text-slate-400 line-clamp-2 max-w-2xl leading-relaxed">
-                    <span className="text-slate-500 font-semibold">Scope: </span>
-                    {ref.abstract}
-                  </p>
-                )}
-
-                <div className="flex items-center space-x-2 shrink-0">
-                  {ref.url && (
-                    <a
-                      href={ref.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-600/20 text-blue-300 hover:bg-blue-600/30 border border-blue-500/30 transition"
-                    >
-                      <ExternalLink className="h-3 w-3" />
-                      <span>{ref.doi ? 'Open DOI / Paper' : 'Direct Link'}</span>
-                    </a>
-                  )}
+              {/* Action Links */}
+              <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+                {ref.url && (
                   <a
-                    href={`https://scholar.google.com/scholar?q=${encodeURIComponent(ref.title)}`}
+                    href={ref.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
+                    className="inline-flex items-center space-x-1 text-emerald-800 hover:underline font-semibold"
                   >
-                    <Globe className="h-3 w-3 text-emerald-400" />
-                    <span>Scholar</span>
+                    <ExternalLink className="h-3 w-3" />
+                    <span>Publisher Link / DOI</span>
                   </a>
-                </div>
+                )}
+                <a
+                  href={`https://scholar.google.com/scholar?q=${encodeURIComponent(ref.title)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition"
+                >
+                  <Globe className="h-2.5 w-2.5 text-emerald-600" />
+                  <span>Google Scholar</span>
+                </a>
+                <a
+                  href={`https://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText=${encodeURIComponent(ref.title)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition"
+                >
+                  <ExternalLink className="h-2.5 w-2.5 text-blue-600" />
+                  <span>IEEE Xplore</span>
+                </a>
               </div>
             </div>
           );

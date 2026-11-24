@@ -1,7 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Navbar } from '@/components/Navbar';
+import { Sidebar } from '@/components/Sidebar';
+import { TopHeader } from '@/components/TopHeader';
+import { HeroBanner } from '@/components/HeroBanner';
+import { MetricsRow } from '@/components/MetricsRow';
 import { UploadZone } from '@/components/UploadZone';
 import { PaperList } from '@/components/PaperList';
 import { GapDashboard } from '@/components/GapDashboard';
@@ -13,19 +16,10 @@ import { ExportModal } from '@/components/ExportModal';
 import { SettingsModal } from '@/components/SettingsModal';
 import { Paper, SynthesisResult } from '@/types';
 import { SAMPLE_PAPERS } from '@/lib/samplePapers';
-import { 
-  Sparkles, 
-  FlaskConical, 
-  Search, 
-  FileCheck, 
-  BookOpen, 
-  GraduationCap, 
-  ArrowRight,
-  ShieldCheck,
-  CheckCircle2
-} from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 export default function Home() {
+  const [activeSection, setActiveSection] = useState('overview');
   const [papers, setPapers] = useState<Paper[]>([]);
   const [synthesis, setSynthesis] = useState<SynthesisResult | null>(null);
   const [isSynthesizing, setIsSynthesizing] = useState(false);
@@ -35,7 +29,7 @@ export default function Home() {
   const [engine, setEngine] = useState<'local' | 'gemini' | 'openai'>('local');
   const [error, setError] = useState<string | null>(null);
 
-  // Load API key from localStorage if present
+  // Load API key & engine from localStorage if present
   useEffect(() => {
     const savedKey = localStorage.getItem('resgap_api_key');
     if (savedKey) setApiKey(savedKey);
@@ -68,7 +62,6 @@ export default function Home() {
 
   const handleLoadSamples = async () => {
     setPapers(SAMPLE_PAPERS);
-    // Auto-synthesize for immediate satisfaction
     await runSynthesisWithPapers(SAMPLE_PAPERS);
   };
 
@@ -79,7 +72,7 @@ export default function Home() {
     }
     setTimeout(() => {
       document.getElementById('results-section')?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
+    }, 120);
   };
 
   const runSynthesis = async () => {
@@ -108,10 +101,9 @@ export default function Home() {
       }
 
       setSynthesis(data.result);
-      // Smooth scroll to results
       setTimeout(() => {
         document.getElementById('results-section')?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
+      }, 120);
     } catch (err: any) {
       console.error(err);
       setError(err.message || 'Error occurred during synthesis.');
@@ -120,148 +112,157 @@ export default function Home() {
     }
   };
 
+  const scrollToInput = () => {
+    document.getElementById('ingest-section')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleNavigate = (sectionId: string) => {
+    setActiveSection(sectionId);
+    if (sectionId === 'overview') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      const el = document.getElementById(`${sectionId}-section`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        document.getElementById('results-section')?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
-      {/* Top Navbar */}
-      <Navbar
-        papersCount={papers.length}
-        hasResults={!!synthesis}
+    <div className="min-h-screen flex bg-[#f4f7f6] text-slate-800 antialiased font-sans">
+      {/* Labflow Sidebar */}
+      <Sidebar
+        activeSection={activeSection}
+        onNavigate={handleNavigate}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenExport={() => setIsExportOpen(true)}
-        onSynthesize={runSynthesis}
-        isSynthesizing={isSynthesizing}
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-        {/* Hero Section */}
-        <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-4">
-            <Sparkles className="h-3.5 w-3.5" />
-            <span>Automated Systematic Literature Gap Extractor</span>
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
-            Pinpoint <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-400">Research Gaps</span> & Formulate Novel Questions
-          </h1>
-          <p className="text-sm sm:text-base text-slate-400 mt-4 leading-relaxed">
-            Ingest peer-reviewed manuscripts or abstracts. ResGap parses cross-paper limitations, identifies under-explored empirical & methodological voids, and formulates publishable Research Questions (RQs).
-          </p>
-
-          {/* Workflow Stepper */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-8 text-left">
-            <div className="p-3.5 rounded-xl bg-slate-900/50 border border-slate-800/80 flex items-start space-x-3">
-              <span className="h-6 w-6 rounded-full bg-blue-950 text-blue-400 border border-blue-800/40 text-xs font-bold flex items-center justify-center shrink-0">1</span>
-              <div>
-                <span className="text-xs font-semibold text-slate-200 block">Ingest Papers</span>
-                <span className="text-[11px] text-slate-400">PDFs, abstracts, or sample literature</span>
-              </div>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-slate-900/50 border border-slate-800/80 flex items-start space-x-3">
-              <span className="h-6 w-6 rounded-full bg-indigo-950 text-indigo-400 border border-indigo-800/40 text-xs font-bold flex items-center justify-center shrink-0">2</span>
-              <div>
-                <span className="text-xs font-semibold text-slate-200 block">Mine Limitations</span>
-                <span className="text-[11px] text-slate-400">Extracts threats to validity & constraints</span>
-              </div>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-slate-900/50 border border-slate-800/80 flex items-start space-x-3">
-              <span className="h-6 w-6 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800/40 text-xs font-bold flex items-center justify-center shrink-0">3</span>
-              <div>
-                <span className="text-xs font-semibold text-slate-200 block">Synthesize Gaps</span>
-                <span className="text-[11px] text-slate-400">Actionable RQs & comparative matrix</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Paper Ingestion Section */}
-        <UploadZone
-          onPaperAdded={handlePaperAdded}
-          onLoadSamples={handleLoadSamples}
-          onProposalAnalyzed={handleProposalAnalyzed}
-          apiKey={apiKey}
-          engine={engine}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Top Header Bar */}
+        <TopHeader
+          onOpenExport={() => setIsExportOpen(true)}
+          onOpenSettings={() => setIsSettingsOpen(true)}
+          papersCount={papers.length}
+          domain={synthesis?.domain}
         />
 
-        {/* List of Extracted Papers */}
-        <PaperList
-          papers={papers}
-          onRemovePaper={handleRemovePaper}
-          onClearAll={handleClearAll}
-        />
+        {/* Scrollable Dashboard Body */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl w-full mx-auto">
+          {/* Deep Forest Green Hero Banner */}
+          <HeroBanner
+            onStartSynthesis={scrollToInput}
+            onLoadSamples={handleLoadSamples}
+            papersCount={papers.length}
+            gapsCount={synthesis?.gaps.length || 0}
+          />
 
-        {/* Floating / Sticky Synthesize Trigger if papers loaded but not synthesized */}
-        {papers.length > 0 && !synthesis && (
-          <div className="mt-8 text-center p-8 rounded-2xl bg-gradient-to-b from-blue-950/30 to-indigo-950/20 border border-blue-900/40">
-            <h3 className="text-lg font-bold text-white mb-2">
-              Ready to Synthesize {papers.length} Academic Publication{papers.length > 1 ? 's' : ''}
-            </h3>
-            <p className="text-xs text-slate-400 max-w-lg mx-auto mb-5">
-              Cross-examine all extracted limitations, methodologies, and datasets to uncover the unresolved research gaps.
-            </p>
-            <button
-              onClick={runSynthesis}
-              disabled={isSynthesizing}
-              className="inline-flex items-center space-x-2.5 px-6 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 transition-all shadow-xl shadow-blue-600/30 cursor-pointer disabled:opacity-50"
-            >
-              <Sparkles className={`h-4 w-4 ${isSynthesizing ? 'animate-spin' : ''}`} />
-              <span>{isSynthesizing ? 'Synthesizing Literature Voids...' : 'Synthesize Research Gaps Now'}</span>
-            </button>
-          </div>
-        )}
+          {/* 8-Stat KPI Metrics Row */}
+          <MetricsRow
+            papersCount={papers.length}
+            gapsCount={synthesis?.gaps.length || 0}
+            referencesCount={synthesis?.references?.length || 0}
+          />
 
-        {/* Error message */}
-        {error && (
-          <div className="mt-6 p-4 rounded-xl bg-red-950/50 border border-red-800 text-sm text-red-200 text-center">
-            {error}
-          </div>
-        )}
-
-        {/* Synthesis Results Section */}
-        {synthesis && (
-          <section id="results-section" className="mt-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {/* Academic Literature References */}
-            {synthesis.references && synthesis.references.length > 0 && (
-              <ReferencesList
-                references={synthesis.references}
-                proposalTitle={synthesis.proposalTitle}
-              />
-            )}
-
-            {/* 4-Member Research Group Component Breakdown */}
-            {synthesis.memberComponents && synthesis.memberComponents.length > 0 && (
-              <MemberComponentsView
-                components={synthesis.memberComponents}
-                projectTitle={synthesis.proposalTitle}
-              />
-            )}
-
-            {/* Primary Gap Dashboard */}
-            <GapDashboard synthesis={synthesis} />
-
-            {/* Systematic Literature Matrix */}
-            <ComparativeMatrix matrix={synthesis.comparativeMatrix} />
-
-            {/* Strategic Research Agenda */}
-            <ResearchAgenda directions={synthesis.recommendedDirections} />
+          {/* Paper / Proposal Ingestion Zone */}
+          <section id="ingest-section" className="pt-2">
+            <UploadZone
+              onPaperAdded={handlePaperAdded}
+              onLoadSamples={handleLoadSamples}
+              onProposalAnalyzed={handleProposalAnalyzed}
+              apiKey={apiKey}
+              engine={engine}
+            />
           </section>
-        )}
-      </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950/80 py-8 mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500 space-y-2">
-          <p className="font-medium text-slate-400">
-            ResGap — Academic Literature & Research Gap Discovery Engine
-          </p>
-          <p>
-            Designed for graduate researchers, principal investigators, and scholars to accelerate rigorous literature review.
-          </p>
-        </div>
-      </footer>
+          {/* Mined Publications List */}
+          <PaperList
+            papers={papers}
+            onRemovePaper={handleRemovePaper}
+            onClearAll={handleClearAll}
+          />
 
-      {/* Modals */}
+          {/* Manual Synthesis CTA when papers loaded but not synthesized */}
+          {papers.length > 0 && !synthesis && (
+            <div className="p-8 rounded-2xl bg-white border border-slate-200/90 shadow-xs text-center">
+              <h3 className="text-lg font-bold text-slate-900 mb-1">
+                Ready to Synthesize {papers.length} Academic Publication{papers.length > 1 ? 's' : ''}
+              </h3>
+              <p className="text-xs text-slate-500 max-w-md mx-auto mb-5">
+                Cross-examine all extracted methodologies, datasets, and limitations to isolate the critical research voids.
+              </p>
+              <button
+                onClick={runSynthesis}
+                disabled={isSynthesizing}
+                className="inline-flex items-center space-x-2 px-6 py-2.5 rounded-full text-xs font-bold text-white bg-[#0d3326] hover:bg-[#124232] shadow-xs transition cursor-pointer disabled:opacity-50"
+              >
+                <Sparkles className={`h-3.5 w-3.5 ${isSynthesizing ? 'animate-spin' : ''}`} />
+                <span>{isSynthesizing ? 'Synthesizing Literature Voids...' : 'Synthesize Research Gaps Now'}</span>
+              </button>
+            </div>
+          )}
+
+          {/* Error Banner */}
+          {error && (
+            <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-xs font-medium text-rose-800 text-center">
+              {error}
+            </div>
+          )}
+
+          {/* Synthesis Results Section */}
+          {synthesis && (
+            <section id="results-section" className="pt-4 space-y-6 animate-in fade-in slide-in-from-bottom-3 duration-300">
+              {/* Academic Literature References */}
+              {synthesis.references && synthesis.references.length > 0 && (
+                <div id="references-section">
+                  <ReferencesList
+                    references={synthesis.references}
+                    proposalTitle={synthesis.proposalTitle}
+                  />
+                </div>
+              )}
+
+              {/* 4-Member Research Group Component Breakdown */}
+              {synthesis.memberComponents && synthesis.memberComponents.length > 0 && (
+                <div id="team-section">
+                  <MemberComponentsView
+                    components={synthesis.memberComponents}
+                    projectTitle={synthesis.proposalTitle}
+                  />
+                </div>
+              )}
+
+              {/* Primary Gap Dashboard */}
+              <div id="gaps-section">
+                <GapDashboard synthesis={synthesis} />
+              </div>
+
+              {/* Systematic Literature Matrix */}
+              <div id="matrix-section">
+                <ComparativeMatrix matrix={synthesis.comparativeMatrix} />
+              </div>
+
+              {/* Strategic Research Agenda */}
+              <ResearchAgenda directions={synthesis.recommendedDirections} />
+            </section>
+          )}
+
+          {/* Dashboard Footer */}
+          <footer className="pt-10 pb-6 border-t border-slate-200/80 text-center text-xs text-slate-400 space-y-1">
+            <p className="font-semibold text-slate-600">
+              ResGap AI • Systematic Literature Review & Void Extractor
+            </p>
+            <p>
+              Empowering principal investigators, postgraduate researchers, and academic teams.
+            </p>
+          </footer>
+        </main>
+      </div>
+
+      {/* Settings Modal */}
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
@@ -271,6 +272,7 @@ export default function Home() {
         setEngine={handleSetEngine}
       />
 
+      {/* Export Modal */}
       <ExportModal
         isOpen={isExportOpen}
         onClose={() => setIsExportOpen(false)}

@@ -214,15 +214,16 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
   };
 
   return (
-    <div className="w-full bg-slate-900/70 border border-slate-800/80 rounded-2xl p-5 md:p-6 shadow-xl backdrop-blur-sm">
+    <div className="w-full bg-white border border-slate-200/90 rounded-2xl p-5 md:p-7 shadow-xs">
       {/* Top Banner / Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-100">
         <div>
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <span>Input Research Proposal or Publications</span>
+          <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+            <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+            <span>Input Research Proposal or Literature</span>
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Enter your proposal title/description or upload a PDF to automatically discover references and isolate research gaps.
+          <p className="text-xs text-slate-500 mt-0.5">
+            Enter your proposal headline or upload a PDF to automatically retrieve academic references and synthesize gaps.
           </p>
         </div>
 
@@ -231,9 +232,9 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
           onClick={onLoadSamples}
           disabled={isProcessing}
           type="button"
-          className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-950/80 hover:bg-indigo-900/90 text-indigo-300 border border-indigo-700/50 hover:border-indigo-500 transition shadow-sm cursor-pointer whitespace-nowrap"
+          className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#f4f7f6] hover:bg-slate-100 text-slate-700 border border-slate-200 transition cursor-pointer whitespace-nowrap shadow-xs"
         >
-          <BookOpen className="h-3.5 w-3.5 text-indigo-400" />
+          <BookOpen className="h-3.5 w-3.5 text-emerald-700" />
           <span>Load 3 Sample Papers</span>
         </button>
       </div>
@@ -243,10 +244,10 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab('text')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer flex items-center space-x-1.5 ${
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center space-x-1.5 ${
             activeTab === 'text'
-              ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-[#0d3326] text-white shadow-xs'
+              : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
           }`}
         >
           <FileText className="h-3.5 w-3.5" />
@@ -255,10 +256,10 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab('upload')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer flex items-center space-x-1.5 ${
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center space-x-1.5 ${
             activeTab === 'upload'
-              ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-[#0d3326] text-white shadow-xs'
+              : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
           }`}
         >
           <Upload className="h-3.5 w-3.5" />
@@ -268,8 +269,8 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
 
       {/* Error notification */}
       {error && (
-        <div className="mb-4 p-3 rounded-xl bg-red-950/50 border border-red-800/60 flex items-start space-x-2 text-xs text-red-200 animate-in fade-in">
-          <AlertCircle className="h-4 w-4 text-red-400 shrink-0 mt-0.5" />
+        <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 flex items-start space-x-2 text-xs text-red-700 animate-in fade-in">
+          <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
@@ -278,14 +279,14 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
       {activeTab === 'upload' ? (
         <div className="space-y-3">
           <div className="flex items-center space-x-3 text-xs">
-            <span className="text-slate-400 font-medium">Upload Mode:</span>
+            <span className="text-slate-500 font-semibold">Upload Mode:</span>
             <button
               type="button"
               onClick={() => setUploadMode('proposal')}
-              className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${
+              className={`px-2.5 py-1 rounded-lg transition cursor-pointer text-xs ${
                 uploadMode === 'proposal'
-                  ? 'bg-blue-600 text-white font-semibold shadow-sm'
-                  : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'
+                  ? 'bg-[#0d3326] text-white font-bold shadow-xs'
+                  : 'bg-[#f4f7f6] text-slate-600 border border-slate-200 hover:text-slate-900'
               }`}
             >
               📝 Proposal PDF (Auto-Find References & Gaps)
@@ -293,10 +294,10 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
             <button
               type="button"
               onClick={() => setUploadMode('literature')}
-              className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${
+              className={`px-2.5 py-1 rounded-lg transition cursor-pointer text-xs ${
                 uploadMode === 'literature'
-                  ? 'bg-blue-600 text-white font-semibold shadow-sm'
-                  : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'
+                  ? 'bg-[#0d3326] text-white font-bold shadow-xs'
+                  : 'bg-[#f4f7f6] text-slate-600 border border-slate-200 hover:text-slate-900'
               }`}
             >
               📄 Literature Papers PDF (Manual Synthesis)
@@ -308,10 +309,10 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onClick={() => !isProcessing && fileInputRef.current?.click()}
-            className={`border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer ${
+            className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all cursor-pointer ${
               isDragging
-                ? 'border-blue-500 bg-blue-950/20 scale-[0.99]'
-                : 'border-slate-800 hover:border-slate-700 bg-slate-950/30'
+                ? 'border-emerald-500 bg-emerald-50/50 scale-[0.99]'
+                : 'border-slate-200 hover:border-slate-300 bg-[#f8faf9]'
             }`}
           >
             <input
@@ -323,15 +324,15 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
               className="hidden"
             />
 
-            <div className="mx-auto h-12 w-12 rounded-full bg-slate-800/80 flex items-center justify-center text-slate-400 mb-3 group-hover:scale-110 transition">
+            <div className="mx-auto h-12 w-12 rounded-full bg-white shadow-xs border border-slate-200 flex items-center justify-center text-emerald-800 mb-3 group-hover:scale-110 transition">
               {isProcessing ? (
-                <Loader2 className="h-6 w-6 text-blue-400 animate-spin" />
+                <Loader2 className="h-6 w-6 text-emerald-700 animate-spin" />
               ) : (
-                <Upload className="h-6 w-6 text-blue-400" />
+                <Upload className="h-6 w-6 text-emerald-700" />
               )}
             </div>
 
-            <h3 className="font-medium text-sm text-slate-200 mb-1">
+            <h3 className="font-bold text-sm text-slate-800 mb-1">
               {isProcessing
                 ? statusText
                 : uploadMode === 'proposal'
@@ -347,21 +348,21 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
         </div>
       ) : (
         /* Text Entry Tab */
-        <div className="space-y-3">
+        <div className="space-y-3.5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <input
               type="text"
               placeholder="Research Title or Proposal Headline (e.g. FlakeLens: Trace-Aware Framework for Flaky Web Test Triage)"
               value={manualTitle}
               onChange={(e) => setManualTitle(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition font-medium"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#f8faf9] border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition font-medium"
             />
             <input
               type="text"
               placeholder="Optional Link / DOI (e.g. https://ieeexplore.ieee.org/... or arXiv / DOI)"
               value={manualUrl}
               onChange={(e) => setManualUrl(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition font-mono text-xs"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#f8faf9] border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition font-mono text-xs"
             />
           </div>
           <div>
@@ -370,7 +371,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
               placeholder="Paste proposal abstract, problem statement, or description (or leave brief summary of what you are proposing)..."
               value={manualText}
               onChange={(e) => setManualText(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 font-mono transition"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#f8faf9] border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white font-mono transition"
             />
           </div>
 
@@ -379,17 +380,17 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
             <button
               type="button"
               onClick={() => setShowGroupInputs(!showGroupInputs)}
-              className="inline-flex items-center space-x-2 text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition cursor-pointer select-none"
+              className="inline-flex items-center space-x-2 text-xs font-semibold text-[#0d3326] hover:text-emerald-800 transition cursor-pointer select-none"
             >
-              <Users className="h-4 w-4" />
+              <Users className="h-4 w-4 text-emerald-700" />
               <span>👥 4-Member Research Group Mode (Click to customize individual member component focuses)</span>
               <ChevronDown className={`h-3 w-3 transform transition-transform ${showGroupInputs ? 'rotate-180' : ''}`} />
             </button>
 
             {showGroupInputs && (
-              <div className="mt-3 p-4 rounded-xl bg-slate-950/80 border border-slate-800/90 grid grid-cols-1 sm:grid-cols-2 gap-3 animate-in fade-in">
+              <div className="mt-3 p-4 rounded-xl bg-[#f8faf9] border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-3 animate-in fade-in">
                 <div>
-                  <label className="text-[11px] font-semibold text-blue-400 block mb-1">
+                  <label className="text-[11px] font-semibold text-slate-700 block mb-1">
                     Member 1 Component Focus
                   </label>
                   <input
@@ -397,11 +398,11 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                     placeholder="e.g. Trace Ingestion & Telemetry Profiler"
                     value={memberComponents.member1}
                     onChange={(e) => setMemberComponents({ ...memberComponents, member1: e.target.value })}
-                    className="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"
+                    className="w-full px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold text-indigo-400 block mb-1">
+                  <label className="text-[11px] font-semibold text-slate-700 block mb-1">
                     Member 2 Component Focus
                   </label>
                   <input
@@ -409,11 +410,11 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                     placeholder="e.g. AI-Assisted Failure Triage & Classification"
                     value={memberComponents.member2}
                     onChange={(e) => setMemberComponents({ ...memberComponents, member2: e.target.value })}
-                    className="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold text-purple-400 block mb-1">
+                  <label className="text-[11px] font-semibold text-slate-700 block mb-1">
                     Member 3 Component Focus
                   </label>
                   <input
@@ -421,11 +422,11 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                     placeholder="e.g. Fault Localization & DOM Slicing"
                     value={memberComponents.member3}
                     onChange={(e) => setMemberComponents({ ...memberComponents, member3: e.target.value })}
-                    className="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-purple-500"
+                    className="w-full px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold text-emerald-400 block mb-1">
+                  <label className="text-[11px] font-semibold text-slate-700 block mb-1">
                     Member 4 Component Focus
                   </label>
                   <input
@@ -433,7 +434,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                     placeholder="e.g. Verified Automated Patch Repair"
                     value={memberComponents.member4}
                     onChange={(e) => setMemberComponents({ ...memberComponents, member4: e.target.value })}
-                    className="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600"
                   />
                 </div>
               </div>
@@ -441,12 +442,12 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
           </div>
 
           {/* Literature Depth Selection */}
-          <div className="flex flex-wrap items-center justify-between gap-3 p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80">
+          <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-[#f8faf9] border border-slate-200">
             <div className="flex items-center space-x-2">
-              <BookOpen className="h-4 w-4 text-blue-400" />
-              <span className="text-xs font-semibold text-slate-300">Literature Depth (Papers to Analyze):</span>
+              <BookOpen className="h-4 w-4 text-emerald-700" />
+              <span className="text-xs font-semibold text-slate-700">Literature Depth (Papers to Analyze):</span>
             </div>
-            <div className="flex items-center space-x-1.5 bg-slate-900 p-1 rounded-lg border border-slate-800 text-xs font-semibold">
+            <div className="flex items-center space-x-1.5 bg-white p-1 rounded-lg border border-slate-200 text-xs font-semibold">
               {[5, 10, 15, 20].map((num) => (
                 <button
                   key={num}
@@ -454,8 +455,8 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
                   onClick={() => setPaperCountLimit(num)}
                   className={`px-2.5 py-1 rounded transition cursor-pointer ${
                     paperCountLimit === num
-                      ? 'bg-blue-600 text-white shadow-sm'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-[#0d3326] text-white shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   {num} Papers {num === 10 ? '★' : ''}
@@ -470,12 +471,12 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
               type="button"
               onClick={handleAnalyzeProposal}
               disabled={isProcessing || (!manualTitle.trim() && !manualText.trim())}
-              className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 disabled:opacity-40 transition-all shadow-lg shadow-blue-600/20 cursor-pointer flex items-center space-x-2"
+              className="px-6 py-2.5 rounded-full text-xs font-bold text-white bg-[#0d3326] hover:bg-[#124233] disabled:opacity-40 transition-all shadow-md shadow-emerald-950/20 cursor-pointer flex items-center space-x-2"
             >
               {isProcessing ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin text-emerald-400" />
               ) : (
-                <Sparkles className="h-4 w-4 text-cyan-300" />
+                <Sparkles className="h-4 w-4 text-emerald-400" />
               )}
               <span>Auto-Find References & Generate 4-Member Research Gaps</span>
             </button>
@@ -485,9 +486,9 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
               type="button"
               onClick={handleManualSubmit}
               disabled={isProcessing || !manualText.trim()}
-              className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-950 hover:bg-slate-800 border border-slate-800 disabled:opacity-40 transition cursor-pointer flex items-center space-x-1.5"
+              className="px-4 py-2.5 rounded-full text-xs font-semibold text-slate-700 hover:text-slate-900 bg-[#f4f7f6] hover:bg-slate-100 border border-slate-200 disabled:opacity-40 transition cursor-pointer flex items-center space-x-1.5"
             >
-              <Plus className="h-3.5 w-3.5 text-slate-400" />
+              <Plus className="h-3.5 w-3.5 text-slate-500" />
               <span>Add as Single Paper to Matrix</span>
             </button>
           </div>
